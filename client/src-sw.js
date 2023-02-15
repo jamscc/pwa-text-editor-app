@@ -27,4 +27,25 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-registerRoute();
+const { NetworkFirst } = require('workbox-strategies');
+const cnm = { cacheName: 'assets' };
+const nf = new NetworkFirst(cnm);
+
+const rq = ({ request }) => {
+  const { destination } = request;
+  switch (destination) {
+    case ('document'):
+      return true;
+    case ('script'):
+      return true;
+    case ('image'):
+      return true;
+    case ('worker'):
+      return true;
+    case ('style'):
+      return true;
+    default:
+      return;
+  }
+};
+registerRoute(rq, nf);
